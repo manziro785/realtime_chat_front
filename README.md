@@ -39,6 +39,5 @@ AzhChat is a real-time chat client built with a modern React ecosystem. It provi
 
 ## Scripts
 - `npm i` — install dep.  
-- `npm dev` — run development server  
+- `npm run dev` — run development server  
 - `npm run build` — build for production  
-- `npm preview` — preview production build    
