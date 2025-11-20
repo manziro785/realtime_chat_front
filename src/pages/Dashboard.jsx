@@ -15,6 +15,22 @@ import { useGetProfile } from "../hooks/profile/useGetProfile";
 import MessageArea from "../components/common/messageArea";
 import Header from "../components/common/header";
 
+/**
+ * SideBar Component channel navigation and user profile
+ *
+ * This component displays:
+ * - Current user profile with avatar
+ * - Search functionality (UI only, implementation pending)
+ * - Create group and join by code buttons
+ * - List of all available channels/groups
+ * - Active channel highlighting
+ *
+ * Features:
+ * - Real-time channel list updates
+ * - Channel switching functionality
+ * - Visual feedback for active channel
+ */
+
 export function Dashboard() {
   const [message, setMessage] = useState("");
   const [modal, setModal] = useState(null);

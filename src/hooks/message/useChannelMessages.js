@@ -3,6 +3,16 @@ import { useSocket } from "../../contexts/socketContext";
 import { useChannelContext } from "../channel/useChannelContext";
 import { useQueryClient } from "@tanstack/react-query";
 
+//  Custom hook for managing real-time channel messages and socket communication
+//  This hook handles:
+//  - Joining/leaving channels via WebSocket
+//  - Receiving new messages in real-time
+//  - Sending messages to the channel
+//  - Tracking user typing indicators
+//  - Monitoring user online/offline status
+//
+//  @returns {Object} Object containing messages array, send functions, and connection status
+//
 export const useChannelMessages = () => {
   const { socket, isConnected } = useSocket();
   const { activeChannel } = useChannelContext();
@@ -11,27 +21,19 @@ export const useChannelMessages = () => {
 
   useEffect(() => {
     if (!socket || !activeChannel?.id || !isConnected) return;
-
-    console.log("Joining channel:", activeChannel.id);
-
-    // Join channel room
     socket.emit("join_channel", { channelId: activeChannel.id });
 
-    // Listen for new messages
     const handleNewMessage = (message) => {
       console.log("New message received:", message);
       setMessages((prev) => [...prev, message]);
     };
 
-    // Listen for typing indicators
     const handleTyping = (data) => {
       console.log(" User typing:", data.nickname);
     };
 
-    // Listen for user status
     const handleUserStatus = (data) => {
       console.log("User status:", data);
-      // Обновляем список участников
       queryClient.invalidateQueries(["channel-members", activeChannel.id]);
     };
 
@@ -39,7 +41,6 @@ export const useChannelMessages = () => {
     socket.on("typing_indicator", handleTyping);
     socket.on("user_status", handleUserStatus);
 
-    // Cleanup
     return () => {
       console.log("Leaving channel:", activeChannel.id);
       socket.emit("leave_channel", { channelId: activeChannel.id });
