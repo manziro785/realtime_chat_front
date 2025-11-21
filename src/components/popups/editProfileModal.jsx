@@ -60,14 +60,12 @@ export const EditProfileModal = ({ open, onClose }) => {
         ) : (
           <>
             <div className="flex items-center gap-4 mb-6">
-              {/* Avatar with first letter */}
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
                 <span className="text-3xl font-semibold text-white">
                   {(nickname || profile.nickname)?.charAt(0).toUpperCase() ||
                     "?"}
                 </span>
               </div>
-
               <div>
                 <h3 className="text-xl font-semibold text-gray-100">
                   {nickname || profile.nickname}

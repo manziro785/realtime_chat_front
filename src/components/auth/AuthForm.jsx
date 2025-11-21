@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { useEffect } from "react";
+import { InputClass } from "../../styles";
 
 export default function AuthForm({ tab }) {
   const { submitAuth } = useAuth();
@@ -24,8 +25,6 @@ export default function AuthForm({ tab }) {
   }, [password, confirmPassword, trigger]);
 
   const isRegister = tab === "register";
-  const inputClass =
-    "w-full px-3 py-2 border-2 border-[#363946] placeholder-[#6A7282] text-[var(--color-text)] bg-[#1A1D29] rounded-lg focus:ring-2 focus:ring-[#363946]";
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -34,7 +33,7 @@ export default function AuthForm({ tab }) {
           type="email"
           placeholder="Enter email"
           {...register("email", { required: "Email is required" })}
-          className={inputClass}
+          className={InputClass}
         />
         {errors.email && (
           <p className="text-red-600 text-sm">{errors.email.message}</p>
@@ -47,7 +46,7 @@ export default function AuthForm({ tab }) {
             type="text"
             placeholder="Your nickname"
             {...register("nickname", { required: "Nickname is required" })}
-            className={inputClass}
+            className={InputClass}
           />
           {errors.nickname && (
             <p className="text-red-600 text-sm">{errors.nickname.message}</p>
@@ -63,7 +62,7 @@ export default function AuthForm({ tab }) {
             required: "Password is required",
             minLength: { value: 6, message: "Minimum 6 characters" },
           })}
-          className={inputClass}
+          className={InputClass}
         />
         {errors.password && (
           <p className="text-red-600 text-sm">{errors.password.message}</p>
@@ -80,7 +79,7 @@ export default function AuthForm({ tab }) {
               validate: (value) =>
                 !value || value === password || "Passwords don't match",
             })}
-            className={inputClass}
+            className={InputClass}
           />
           {errors.confirmPassword && (
             <p className="text-red-600 text-sm">

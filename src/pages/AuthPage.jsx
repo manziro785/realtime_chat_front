@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import AuthForm from "../components/common/auth/AuthForm";
+import AuthForm from "../components/auth/AuthForm";
 
 export const AuthPage = () => {
   const navigate = useNavigate();

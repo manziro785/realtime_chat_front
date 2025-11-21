@@ -16,9 +16,7 @@ export default function MessageArea({
       ) : (
         <>
           {allMessages.map((msg, index) => {
-            const isMine =
-              id_current_user &&
-              String(msg.sender_id) === String(id_current_user);
+            String(msg.sender_id) === String(id_current_user);
             const nickname =
               msg.sender_nickname || msg.senderNickname || "Unknown";
             const timestamp = msg.created_at || msg.createdAt;

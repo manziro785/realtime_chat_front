@@ -1,5 +1,3 @@
-// interceptors axios
-
 import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -23,7 +21,7 @@ api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.res?.status === 401) {
-      console.warn("401 Не авториз");
+      console.warn("401");
       localStorage.removeItem("token");
       window.location.href = "/auth";
     }

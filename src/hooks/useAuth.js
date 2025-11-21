@@ -8,7 +8,6 @@ export const useAuth = () => {
   const handleSuccess = (data) => {
     localStorage.setItem("token", data.token);
     useAuthStore.getState().setToken(data.token);
-
     navigate("/dashboard");
   };
 

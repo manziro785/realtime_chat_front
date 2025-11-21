@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import { Edit, Users, Plus, BadgeMinus } from "lucide-react";
 import { useChannelContext } from "../../hooks/channel/useChannelContext";
 import { useGetChannelMembers } from "../../hooks/members/useGetChannelMembers";
@@ -7,14 +6,6 @@ import { ButtonPrimaryClass } from "../../styles";
 export default function InfoBlock({ openModal, handleDeleteClick }) {
   const { activeChannel } = useChannelContext();
   const { data } = useGetChannelMembers();
-  const fileInputRef = useRef(null);
-  const users = data?.members;
-
-  const handleIconClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   return (
     <>
@@ -32,14 +23,10 @@ export default function InfoBlock({ openModal, handleDeleteClick }) {
               <img
                 src={activeChannel.avatar_url}
                 alt={activeChannel.name}
-                onClick={handleIconClick}
                 className="w-30 h-30 rounded-full object-cover cursor-pointer"
               />
             ) : (
-              <div
-                onClick={handleIconClick}
-                className="w-30 h-30 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center cursor-pointer"
-              >
+              <div className="w-30 h-30 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center cursor-pointer">
                 <span className="text-4xl font-semibold">
                   {activeChannel.name?.charAt(0).toUpperCase() || "#"}
                 </span>
@@ -67,7 +54,7 @@ export default function InfoBlock({ openModal, handleDeleteClick }) {
           </div>
 
           <div className="space-y-2 flex-1 overflow-y-auto">
-            {users?.map((user) => {
+            {data?.members?.map((user) => {
               const isAdmin = user.id === activeChannel.creator_id;
 
               return (

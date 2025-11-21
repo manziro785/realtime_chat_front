@@ -5,7 +5,8 @@ import { useChannelMessages } from "../hooks/message/useChannelMessages";
 import { useGetChannelMessagesHistory } from "../hooks/message/useGetChannelMessagesHistory";
 import SideBar from "../components/common/SideBar";
 import InfoBlock from "../components/common/infoBlock";
-import { CreateGroupModal } from "../components/popups/CreateGroupModal";
+import InputBlock from "../components/common/inputBlock";
+import { CreateGroupModal } from "../components/popups/createGroupModal";
 import { EditGroupModal } from "../components/popups/EditGroupModal";
 import { EditProfileModal } from "../components/popups/EditProfileModal";
 import EnterCodeModal from "../components/popups/EnterCodeModal";
@@ -14,6 +15,7 @@ import DeleteChannel from "../components/popups/deleteChannel";
 import { useGetProfile } from "../hooks/profile/useGetProfile";
 import MessageArea from "../components/common/messageArea";
 import Header from "../components/common/header";
+import NoChat from "../components/common/noChat";
 
 /**
  * SideBar Component channel navigation and user profile
@@ -40,18 +42,15 @@ export function Dashboard() {
   const { activeChannel } = useChannelContext();
   const { data } = useGetProfile();
   const messagesEndRef = useRef(null);
-
+  const closeSidebar = () => setShowSidebar(false);
+  const closeInfo = () => setShowInfo(false);
   const id_current_user = data?.user?.id ? String(data.user.id) : null;
-
-  const {
-    messages: liveMessages,
-    sendMessage,
-    isConnected,
-  } = useChannelMessages();
-  const { data: historyData } = useGetChannelMessagesHistory();
-
-  const historyMessages = historyData?.messages || [];
   const uniqueIds = new Set();
+  const { data: historyData } = useGetChannelMessagesHistory();
+  const openModal = (type) => setModal(type);
+  const { messages: liveMessages, sendMessage } = useChannelMessages();
+  const historyMessages = historyData?.messages || [];
+
   const allMessages = [...historyMessages, ...liveMessages]
     .filter((msg) => {
       if (uniqueIds.has(msg.id)) return false;
@@ -79,7 +78,6 @@ export function Dashboard() {
     };
   }, [showSidebar, showInfo]);
 
-  const openModal = (type) => setModal(type);
   const closeModal = () => {
     setModal(null);
     setSelectedMember(null);
@@ -96,16 +94,6 @@ export function Dashboard() {
     setMessage("");
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  const closeSidebar = () => setShowSidebar(false);
-  const closeInfo = () => setShowInfo(false);
-
   return (
     <div className="flex h-screen bg-[#1a1d29] text-white overflow-hidden">
       {showSidebar && (
@@ -114,7 +102,6 @@ export function Dashboard() {
           onClick={closeSidebar}
         />
       )}
-
       <div
         className={`fixed lg:relative inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out lg:transform-none ${
           showSidebar ? "translate-x-0" : "-translate-x-full"
@@ -132,45 +119,14 @@ export function Dashboard() {
               id_current_user={id_current_user}
               messagesEndRef={messagesEndRef}
             />
-
-            {/* Input Area */}
-            <div className="p-3 sm:p-4 border-t border-[#1e1f22] safe-bottom">
-              <div className="bg-[#252936] rounded-lg flex items-center px-3 sm:px-4 py-2 sm:py-3">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={`Message #${activeChannel.name}`}
-                  className="flex-1 bg-transparent focus:outline-none text-sm sm:text-base text-gray-200 placeholder-gray-500"
-                  disabled={!isConnected}
-                />
-                <button
-                  onClick={handleSendMessage}
-                  className="ml-2 text-blue-500 hover:text-blue-400 transition disabled:text-gray-600 p-1"
-                  disabled={!isConnected || !message.trim()}
-                >
-                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-              </div>
-            </div>
+            <InputBlock
+              message={message}
+              setMessage={setMessage}
+              handleSendMessage={handleSendMessage}
+            />
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-4">
-            <button
-              onClick={() => setShowSidebar(true)}
-              className="lg:hidden absolute top-4 left-4 p-2 hover:bg-[#2b2d31] rounded transition"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-            <Hash className="w-16 h-16 sm:w-20 sm:h-20 mb-4" />
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-center">
-              Select a channel to start
-            </h2>
-            <p className="text-xs sm:text-sm text-center">
-              Choose a channel from the sidebar
-            </p>
-          </div>
+          <NoChat setShowSidebar={setShowSidebar} />
         )}
       </div>
 
@@ -200,17 +156,16 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* Modals */}
       <CreateGroupModal open={modal === "group"} onClose={closeModal} />
       <EditGroupModal open={modal === "edit"} onClose={closeModal} />
       <EditProfileModal open={modal === "profile"} onClose={closeModal} />
       <EnterCodeModal open={modal === "code"} onClose={closeModal} />
+      <DeleteChannel open={modal === "delete_channel"} onClose={closeModal} />
       <DeleteMember
         open={modal === "delete_member"}
         onClose={closeModal}
         member={selectedMember}
       />
-      <DeleteChannel open={modal === "delete_channel"} onClose={closeModal} />
     </div>
   );
 }

@@ -6,13 +6,9 @@ import { useGetProfile } from "../../hooks/profile/useGetProfile";
 export default function SideBar({ openModal }) {
   const { data, isPending, error } = useGetChannel();
   const { activeChannel, setActiveChannel } = useChannelContext();
-  const { data: data2, isPending: isPending2, error: error2 } = useGetProfile();
+  const { data: data2 } = useGetProfile();
   const profile = data2?.user || [];
   const channels = data?.channels || [];
-
-  const handleChannelClick = (channel) => {
-    setActiveChannel(channel);
-  };
 
   return (
     <div className="w-90 h-full bg-[#252936] flex flex-col">
@@ -22,7 +18,6 @@ export default function SideBar({ openModal }) {
       >
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
           <span className="text-lg font-semibold">
-            {" "}
             {profile?.nickname?.charAt(0).toUpperCase()}
           </span>
         </div>
@@ -30,7 +25,6 @@ export default function SideBar({ openModal }) {
           <p className="font-semibold">{profile.nickname}</p>
         </div>
       </div>
-
       <div className="p-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -41,7 +35,6 @@ export default function SideBar({ openModal }) {
           />
         </div>
       </div>
-
       <div className="px-3 pb-3 space-y-2 flex gap-x-2">
         <button
           onClick={() => openModal("group")}
@@ -58,10 +51,9 @@ export default function SideBar({ openModal }) {
           Enter code
         </button>
       </div>
-
       <div className="flex-1 overflow-y-auto mt-6">
         <div className="px-3 pb-2 text-xs font-semibold text-gray-400 uppercase">
-          Channels / Friends ({channels.length})
+          Channels ({channels.length})
         </div>
 
         {isPending && (
@@ -81,7 +73,7 @@ export default function SideBar({ openModal }) {
         {channels.map((channel) => (
           <div
             key={channel.id}
-            onClick={() => handleChannelClick(channel)}
+            onClick={() => setActiveChannel(channel)}
             className={`mx-2 mb-1 px-3 py-2 rounded flex items-center gap-3 cursor-pointer transition ${
               activeChannel?.id === channel.id
                 ? "bg-[#313747] text-white"

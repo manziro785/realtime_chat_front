@@ -9,8 +9,7 @@ export default function AddMember({ open, onClose }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const { addMember, isPending } = useAddMember();
-  const { data, isLoading, error } = useSearchUsers(searchQuery);
-
+  const { data, isLoading } = useSearchUsers(searchQuery);
   const users = data?.users || [];
 
   const handleAdd = async () => {

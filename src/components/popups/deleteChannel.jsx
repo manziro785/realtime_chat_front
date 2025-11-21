@@ -6,12 +6,13 @@ import { useChannelContext } from "../../hooks/channel/useChannelContext";
 export default function DeleteChannel({ open, onClose }) {
   const { deleteChannel, isPending } = useDeleteChannel();
   const { activeChannel } = useChannelContext();
+
   const handleDelete = async () => {
     try {
       await deleteChannel({ channelId: activeChannel.id });
       onClose();
     } catch (error) {
-      console.error("Error deleting channel:", error);
+      console.error("Error deleting", error);
     }
   };
 
