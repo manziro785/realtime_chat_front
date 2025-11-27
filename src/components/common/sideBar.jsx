@@ -1,30 +1,57 @@
-import { Hash, MessageSquare, Plus, Search } from "lucide-react";
+import { Hash, LogOut, MessageSquare, Plus, Search } from "lucide-react";
 import { useGetChannel } from "../../hooks/channel/useGetChannel";
 import { useChannelContext } from "../../hooks/channel/useChannelContext";
 import { useGetProfile } from "../../hooks/profile/useGetProfile";
+import { useNavigate } from "react-router-dom";
+import { queryClient } from "../../lib/queryClient";
+import { useAuthStore } from "../../store/useAuthStore";
 
-export default function SideBar({ openModal }) {
+export default function SideBar({ openModal, closeSidebar }) {
   const { data, isPending, error } = useGetChannel();
   const { activeChannel, setActiveChannel } = useChannelContext();
   const { data: data2 } = useGetProfile();
   const profile = data2?.user || [];
   const channels = data?.channels || [];
+  const navigate = useNavigate();
+
+  const logOut = async () => {
+    useAuthStore.getState().logOut();
+    sessionStorage.clear();
+    queryClient.clear();
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    navigate("/", { replace: true });
+  };
+
+  const handleChannelClick = (channel) => {
+    setActiveChannel(channel);
+    if (closeSidebar) {
+      closeSidebar();
+    }
+  };
 
   return (
     <div className="w-90 h-full bg-[#252936] flex flex-col">
-      <div
-        onClick={() => openModal("profile")}
-        className="hover:bg-[#25293698] cursor-pointer p-4 flex items-center gap-3 border-b border-[#1e1f22]"
-      >
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
-          <span className="text-lg font-semibold">
-            {profile?.nickname?.charAt(0).toUpperCase()}
-          </span>
+      <div className="flex justify-between items-center pr-5">
+        <div
+          onClick={() => openModal("profile")}
+          className="hover:bg-[#25293698] cursor-pointer p-4 flex items-center gap-3 border-b border-[#1e1f22]"
+        >
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center">
+            <span className="text-lg font-semibold">
+              {profile?.nickname?.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold">{profile.nickname}</p>
+          </div>
         </div>
-        <div className="flex-1">
-          <p className="font-semibold">{profile.nickname}</p>
-        </div>
+        <LogOut
+          className="cursor-pointer hover:text-red-400 transition"
+          size={18}
+          onClick={logOut}
+        />
       </div>
+
       <div className="p-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -35,6 +62,7 @@ export default function SideBar({ openModal }) {
           />
         </div>
       </div>
+
       <div className="px-3 pb-3 space-y-2 flex gap-x-2">
         <button
           onClick={() => openModal("group")}
@@ -51,6 +79,7 @@ export default function SideBar({ openModal }) {
           Enter code
         </button>
       </div>
+
       <div className="flex-1 overflow-y-auto mt-6">
         <div className="px-3 pb-2 text-xs font-semibold text-gray-400 uppercase">
           Channels ({channels.length})
@@ -73,7 +102,7 @@ export default function SideBar({ openModal }) {
         {channels.map((channel) => (
           <div
             key={channel.id}
-            onClick={() => setActiveChannel(channel)}
+            onClick={() => handleChannelClick(channel)}
             className={`mx-2 mb-1 px-3 py-2 rounded flex items-center gap-3 cursor-pointer transition ${
               activeChannel?.id === channel.id
                 ? "bg-[#313747] text-white"

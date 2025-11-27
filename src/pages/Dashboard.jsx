@@ -17,22 +17,6 @@ import MessageArea from "../components/common/messageArea";
 import Header from "../components/common/header";
 import NoChat from "../components/common/noChat";
 
-/**
- * SideBar Component channel navigation and user profile
- *
- * This component displays:
- * - Current user profile with avatar
- * - Search functionality (UI only, implementation pending)
- * - Create group and join by code buttons
- * - List of all available channels/groups
- * - Active channel highlighting
- *
- * Features:
- * - Real-time channel list updates
- * - Channel switching functionality
- * - Visual feedback for active channel
- */
-
 export function Dashboard() {
   const [message, setMessage] = useState("");
   const [modal, setModal] = useState(null);
@@ -113,7 +97,7 @@ export function Dashboard() {
       <div className="flex-1 flex flex-col w-full lg:w-auto">
         {activeChannel ? (
           <>
-            <Header />
+            <Header setShowSidebar={setShowSidebar} setShowInfo={setShowInfo} />
             <MessageArea
               allMessages={allMessages}
               id_current_user={id_current_user}

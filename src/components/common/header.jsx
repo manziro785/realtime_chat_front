@@ -1,5 +1,4 @@
 import { Hash, Menu, MessageSquare } from "lucide-react";
-import React from "react";
 import { useChannelContext } from "../../hooks/channel/useChannelContext";
 import { useChannelMessages } from "../../hooks/message/useChannelMessages";
 
